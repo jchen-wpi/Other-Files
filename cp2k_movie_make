@@ -1,0 +1,31 @@
+# This script is used to generate initial and final geometries and make them in one movie file.
+# This will also generate a text file with all the final geometeries' energy.
+# Prerequisite: ase properly installed on local machine. 
+# Author: Junbo Chen
+# Date: August 2017
+
+import os
+from itertools import islice
+from ase.io import read, write
+
+os.system('mkdir geometry; touch geometry/energy.txt')
+
+for i in range(1,12): #specify the number of geometries in range
+    os.chdir('%d'%i)
+    os.system('cp a.xyz ../geometry/%d.xyz'%(i))
+    os.system('cat ../geometry/%d.xyz >> ../geometry/all.xyz'%(i))
+    
+    struct = read('ana-pos-1.xyz')
+    final_struct = write('final.xyz',struct)  
+
+    with open('final.xyz','r') as lines:
+        for line in islice(lines, 1, 2):
+            split = line.split(" ")[11]
+            with open('../geometry/energy.txt','a') as text_file:
+                text_file.write('Geometry ' + '%d'%(i) + ' ' + split + '\n')
+                text_file.close()
+            lines.close()
+
+    os.system('cp final.xyz ../geometry/%d_final.xyz'%(i))
+    os.system('cat ../geometry/%d_final.xyz >> ../geometry/all.xyz'%(i))
+    os.chdir('../')
