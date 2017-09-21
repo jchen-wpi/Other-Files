@@ -1,0 +1,18 @@
+# This script writes new atom to the end of the xyz file. Also changes the total number of atoms.
+
+# Author: Junbo Chen
+# Date: September 2017
+
+with open('a.xyz', 'r') as fin:
+    data = fin.read().splitlines(True)
+
+with open('a.xyz', 'w') as fout:
+	fout.write('292\n')   # new number of atoms
+
+
+with open('a.xyz', 'a') as fout:
+    fout.writelines(data[1:])
+
+with open('a.xyz', 'a') as fout:   
+    fout.write('H     18.58280787       1.50893493      20.56159232        1') # new atom xyz at the end of the line
+
